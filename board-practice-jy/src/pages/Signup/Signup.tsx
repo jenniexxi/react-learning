@@ -44,21 +44,35 @@ const Signup = () => {
   });
 
   const { mutate: emailChkMutate } = useMutation({
-    mutationFn: () => BoardAPI.getChkEmail(watch("email")),
+    mutationFn: () => {
+      // BoardAPI.getChkEmail(watch("email"));
+      const email = watch("email");
+
+      if (!email) {
+        setError("email", { type: "custom" });
+        return Promise.reject("이메일이 비어있습니다.");
+      }
+
+      return BoardAPI.getChkEmail(email);
+    },
     onSuccess: (data) => {
       setIsValidateBtn(data.available);
       setError("email", { type: "custom", message: data.message });
-      console.log(data)
+      console.log(data);
+    },
+    onError: (error) => {
+      console.error("API 요청 중 오류 발생:", error);
     },
   });
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <ul>
+    <S.SignupWrap>
+      <h1>회원가입</h1>
+      <S.SignupForm onSubmit={handleSubmit(onSubmit)}>
+        <S.SignupList>
           <li>
             <label htmlFor="">이메일</label>
-            <input
+            <S.EmailInput
               type="text"
               {...register("email", {
                 pattern: {
@@ -68,17 +82,17 @@ const Signup = () => {
                 },
                 required: {
                   value: true,
-                  message: "이메일을 적어주세요.",
+                  message: "이메일을 입력해주세요.",
                 },
               })}
               placeholder="이메일을 입력해주세요"
             />
-            <button onClick={() => emailChkMutate()}>중복 체크</button>
-            <p>{errors?.email?.message}</p>
+            <S.ChkBtn onClick={() => emailChkMutate()}>중복 체크</S.ChkBtn>
+            <S.ErrorText>{errors?.email?.message}</S.ErrorText>
           </li>
           <li>
             <label htmlFor="">비밀번호</label>
-            <input
+            <S.CommInput
               type="text"
               {...register("password", {
                 pattern: {
@@ -93,11 +107,11 @@ const Signup = () => {
               })}
               placeholder="비밀번호를 입력해주세요"
             />
-            <p>{errors?.password?.message}</p>
+            <S.ErrorText>{errors?.password?.message}</S.ErrorText>
           </li>
           <li>
             <label htmlFor="">비밀번호 확인</label>
-            <input
+            <S.CommInput
               type="text"
               {...register("pwConfirm", {
                 pattern: {
@@ -112,11 +126,11 @@ const Signup = () => {
               })}
               placeholder="비밀번호를 입력해주세요"
             />
-            <p>{errors?.pwConfirm?.message}</p>
+            <S.ErrorText>{errors?.pwConfirm?.message}</S.ErrorText>
           </li>
           <li>
             <label htmlFor="">이름</label>
-            <input
+            <S.CommInput
               type="text"
               {...register("name", {
                 required: {
@@ -129,7 +143,7 @@ const Signup = () => {
           </li>
           <li>
             <label htmlFor="">별명</label>
-            <input
+            <S.CommInput
               type="text"
               {...register("username", {
                 required: {
@@ -140,15 +154,15 @@ const Signup = () => {
               placeholder="별명을 입력해주세요"
             />
           </li>
-        </ul>
-        <button type="submit" disabled={!isValidateBtn}>
+        </S.SignupList>
+        <S.SignupBtn type="submit" disabled={!isValidateBtn}>
           확인
-        </button>
-      </form>
-      <div>
-        <button>로그인 페이지로 이동</button>
-      </div>
-    </div>
+        </S.SignupBtn>
+      </S.SignupForm>
+      <S.LinkBox>
+        <S.LinkTo to="/login">로그인 페이지로</S.LinkTo>
+      </S.LinkBox>
+    </S.SignupWrap>
   );
 };
 

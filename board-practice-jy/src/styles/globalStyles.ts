@@ -22,7 +22,7 @@ const GlobalStyles = createGlobalStyle`
         background-color: #F6F9F0;
         margin-bottom: 100px;
     }
-    ol, ul{
+    ol, ul, li{
         list-style: none;
     }
     button {

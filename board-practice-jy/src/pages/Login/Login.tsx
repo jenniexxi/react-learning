@@ -1,11 +1,23 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as S from "./Login.style";
 import { useMutation } from "@tanstack/react-query";
 import BoardAPI, { LoginReq } from "@apis/boardApi";
+import { getCookie, setCookie } from "@apis/cookie";
+import { useNavigate } from "react-router-dom";
+import authStore from "@stores/authStore";
 
 const Login = () => {
   const loginEmail = useRef("");
   const loginPw = useRef("");
+  const navigate = useNavigate();
+  const { setUserInfoList } = authStore();
+  const token = getCookie("token");
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, []);
 
   const handleLogin = () => {
     console.log(loginEmail.current);
@@ -17,17 +29,23 @@ const Login = () => {
     mutationFn: (body: LoginReq) => BoardAPI.postLogin(body),
     onSuccess: (data) => {
       console.log(data);
-      // 데이터에 access token 은 cookie 에 저장
-      // 데이터 유저는 zustand에 저장
+      if (data.access_token) {
+        setCookie("token", data.access_token, {
+          path: "/",
+          sameSite: "strict",
+        });
+        setUserInfoList(data.user);
+        navigate("/");
+      }
     },
     onError: (error) => console.log("error", error),
   });
 
   return (
-    <div>
+    <S.LoginWrap>
       <h1>로그인</h1>
-      <div>
-        <ul>
+      <S.LoginContainer>
+        <S.LoginList>
           <li>
             <label htmlFor="">ID(이메일)</label>
             <input
@@ -35,6 +53,7 @@ const Login = () => {
               onChange={(e) => {
                 loginEmail.current = e.currentTarget.value;
               }}
+              placeholder="이메일을 입력해주세요"
             />
           </li>
           <li>
@@ -44,12 +63,16 @@ const Login = () => {
               onChange={(e) => {
                 loginPw.current = e.currentTarget.value;
               }}
+              placeholder="비밀번호를 입력해주세요"
             />
           </li>
-        </ul>
-        <button onClick={handleLogin}>로그인</button>
-      </div>
-    </div>
+        </S.LoginList>
+        <S.LoginBtn onClick={handleLogin}>로그인</S.LoginBtn>
+        <S.LinkBox>
+          <S.LinkTo to="/signup">회원가입 페이지로</S.LinkTo>
+        </S.LinkBox>
+      </S.LoginContainer>
+    </S.LoginWrap>
   );
 };
 

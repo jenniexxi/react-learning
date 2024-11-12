@@ -42,14 +42,8 @@ export type LoginReq = {
 
 export type LoginResp = {
   access_token: string;
-  user: {
-    id: number;
-    email: string;
-    username: string;
-    name: string;
-    createdAt: string;
-  };
-}[];
+  user: SignupResp;
+};
 
 const BoardAPI = {
   createSignUp: (body: SignupReq): Promise<SignupResp> => {
@@ -73,6 +67,15 @@ const BoardAPI = {
   postLogin: (body: LoginReq): Promise<LoginResp> => {
     return axiosInstance
       .post(Url.postLogin, body)
+      .then((resp) => resp.data)
+      .catch((e) => {
+        console.error("API Error:", e);
+        throw e;
+      });
+  },
+  getUserProfile: (): Promise<SignupResp> => {
+    return axiosInstance
+      .get(Url.getUserProfile)
       .then((resp) => resp.data)
       .catch((e) => {
         console.error("API Error:", e);

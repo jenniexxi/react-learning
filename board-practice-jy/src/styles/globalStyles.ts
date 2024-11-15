@@ -30,6 +30,19 @@ const GlobalStyles = createGlobalStyle`
         background: transparent;
         cursor: pointer;
     }
+    table {
+        padding: 0;
+        border: 0;
+        border-spacing: 0px;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 0;
+    }
+    textarea {
+        resize: none;
+    }
+  }
 `;
 
 export default GlobalStyles;

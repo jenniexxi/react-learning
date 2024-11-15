@@ -2,11 +2,13 @@ import styled from "styled-components";
 
 export const HeaderContainer = styled.div`
   width: 100%;
+  max-width: 1024px;
   margin: 0 auto;
+  padding: 0 10px;
 `;
 
 export const HeaderWrap = styled.header`
-  width: 80%;
+  width: 100%;
   height: 60px;
   margin: 0 auto;
   display: flex;

@@ -45,6 +45,113 @@ export type LoginResp = {
   user: SignupResp;
 };
 
+export type BoardListReq = {
+  page: number;
+  limit: number;
+  search?: string;
+  searchType?: string;
+};
+
+export type BoardListResp = {
+  posts: {
+    id: number;
+    title: string;
+    content: string;
+    views: number;
+    likes: number;
+    user: {
+      id: number;
+      email: string;
+      username: string;
+      name: string;
+      createdAt: string;
+    };
+    comments: [
+      {
+        id: number;
+        content: string;
+        user: {
+          id: number;
+          email: string;
+          username: string;
+          name: string;
+          createdAt: string;
+        };
+        createdAt: string;
+        updatedAt: string;
+      }
+    ];
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  total: number;
+};
+
+export type postInfo = {
+  title: string;
+  content: string;
+};
+
+export type postInfoResp = {
+  id: number;
+  title: string;
+  content: string;
+  views: number;
+  likes: number;
+  user: {
+    id: number;
+    email: string;
+    username: string;
+    name: string;
+    createdAt: string;
+  };
+  comments: {
+    id: number;
+    content: string;
+    user: {
+      id: number;
+      email: string;
+      username: string;
+      name: string;
+      createdAt: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type detailPostResp = {
+  id: number;
+  title: string;
+  content: string;
+  views: number;
+  likes: number;
+  user: {
+    id: number;
+    email: string;
+    username: string;
+    name: string;
+    createdAt: string;
+  };
+  comments: {
+    id: number;
+    content: string;
+    user: {
+      id: number;
+      email: string;
+      username: string;
+      name: string;
+      createdAt: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  createdAt: string;
+  updatedAt: string;
+};
+
 const BoardAPI = {
   createSignUp: (body: SignupReq): Promise<SignupResp> => {
     return axiosInstance
@@ -79,6 +186,56 @@ const BoardAPI = {
       .then((resp) => resp.data)
       .catch((e) => {
         console.error("API Error:", e);
+        throw e;
+      });
+  },
+  getBoardList: ({
+    page,
+    limit,
+    search = "",
+    searchType = "",
+  }: BoardListReq): Promise<BoardListResp> => {
+    const query = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      search: search,
+      searchType: searchType,
+    });
+
+    return axiosInstance
+      .get(Url.getBoardList + "?" + query.toString())
+      .then((resp) => resp.data)
+      .catch((e) => {
+        console.error("API Error:", e);
+        throw e;
+      });
+  },
+  createPost: (body: postInfo): Promise<postInfoResp> => {
+    return axiosInstance
+      .post(Url.createPost, body)
+      .then((resp) => resp.data)
+      .catch((e) => {
+        console.error("create board API Error:", e);
+        throw e;
+      });
+  },
+  getDetail: (id: string): Promise<detailPostResp> => {
+    return axiosInstance
+      .get(Url.getDetail(id))
+      .then((resp) => resp.data)
+      .catch((e) => {
+        console.error("detailPage API Error:", e);
+        throw e;
+      });
+  },
+  updatePost: (id: string, body: postInfo): Promise<detailPostResp> => {
+    const url = Url.updatePost(id);
+
+    return axiosInstance
+      .put(url, body)
+      .then((resp) => resp.data)
+      .catch((e) => {
+        console.error("updatePost API Error:", e);
         throw e;
       });
   },

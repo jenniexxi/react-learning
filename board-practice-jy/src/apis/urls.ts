@@ -7,4 +7,5 @@ export const Url = {
   createPost: "/board/posts",
   getDetail: (id: string) => `/board/posts/${id}`,
   updatePost: (id: string) => `/board/posts/${id}`,
+  deletePost: (id: string) => `/board/posts/${id}`,
 };

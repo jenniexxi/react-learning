@@ -84,6 +84,7 @@ export const BoardTable = styled.table`
   }
   tbody {
     tr {
+      cursor: pointer;
       td {
         padding: 10px 5px;
         font-size: 14px;

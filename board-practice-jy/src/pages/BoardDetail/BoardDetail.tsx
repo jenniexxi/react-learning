@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import * as S from "./BoardDetail.style";
 import BoardAPI from "@apis/boardApi";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,9 +17,15 @@ const BoardDetail = () => {
     error,
   } = useQuery({
     queryKey: ["postDetailLists", id],
-    queryFn: () =>
-      id ? BoardAPI.getDetail(id) : Promise.reject("id가 없습니다."),
+    queryFn: () => BoardAPI.getDetail(id!),
     enabled: !!id, // id가 있을 때만 쿼리 실행
+  });
+  
+  const {mutate: deleteMutate} = useMutation({
+    mutationFn: (id: string) => BoardAPI.deletePost(id),
+    onSuccess: () => {
+      navigate("/");
+    },
   });
 
   console.log("Post Detail Data:", postDetailData);
@@ -31,6 +37,12 @@ const BoardDetail = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>실패</div>;
 
+  const handleDelete = () => {
+    if (window.confirm("해당 게시글을 삭제하시겠습니까?")) {
+      deleteMutate(id!);
+    }
+  }
+
   return (
     <S.DetailWrap>
       <S.ContsContainer>
@@ -39,7 +51,7 @@ const BoardDetail = () => {
         {userInfo?.id === postDetailData?.user.id && (
           <S.BtnBox>
             <button onClick={handleUpdate}>수정</button>
-            <button>삭제</button>
+            <button onClick={handleDelete}>삭제</button>
           </S.BtnBox>
         )}
 

@@ -239,6 +239,17 @@ const BoardAPI = {
         throw e;
       });
   },
+  deletePost: (id: string): Promise<void> => {
+    const url = Url.deletePost(id);
+
+    return axiosInstance
+      .delete(url)
+      .then((resp) => resp.data)
+      .catch((e) => {
+        console.error("deletePost API Error:", e);
+        throw e;
+      });
+  },
 };
 
 export default BoardAPI;

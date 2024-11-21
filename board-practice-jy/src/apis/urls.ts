@@ -8,4 +8,6 @@ export const Url = {
   getDetail: (id: string) => `/board/posts/${id}`,
   updatePost: (id: string) => `/board/posts/${id}`,
   deletePost: (id: string) => `/board/posts/${id}`,
+  likesPost: (id: string) => `/board/posts/${id}/like`,
+  createComment: (id: string) => `/board/posts/${id}/comments`,
 };

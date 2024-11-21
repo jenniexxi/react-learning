@@ -52,38 +52,16 @@ export type BoardListReq = {
   searchType?: string;
 };
 
+export type CommentsInfo = {
+  id: number;
+  content: string;
+  user: SignupResp;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type BoardListResp = {
-  posts: {
-    id: number;
-    title: string;
-    content: string;
-    views: number;
-    likes: number;
-    user: {
-      id: number;
-      email: string;
-      username: string;
-      name: string;
-      createdAt: string;
-    };
-    comments: [
-      {
-        id: number;
-        content: string;
-        user: {
-          id: number;
-          email: string;
-          username: string;
-          name: string;
-          createdAt: string;
-        };
-        createdAt: string;
-        updatedAt: string;
-      }
-    ];
-    createdAt: string;
-    updatedAt: string;
-  }[];
+  posts: postInfoResp[];
   total: number;
 };
 
@@ -98,56 +76,16 @@ export type postInfoResp = {
   content: string;
   views: number;
   likes: number;
-  user: {
-    id: number;
-    email: string;
-    username: string;
-    name: string;
-    createdAt: string;
-  };
-  comments: {
-    id: number;
-    content: string;
-    user: {
-      id: number;
-      email: string;
-      username: string;
-      name: string;
-      createdAt: string;
-    };
-    createdAt: string;
-    updatedAt: string;
-  }[];
+  user: SignupResp;
+  comments: CommentsInfo[];
   createdAt: string;
   updatedAt: string;
 };
 
-export type detailPostResp = {
+export type commentsResp = {
   id: number;
-  title: string;
   content: string;
-  views: number;
-  likes: number;
-  user: {
-    id: number;
-    email: string;
-    username: string;
-    name: string;
-    createdAt: string;
-  };
-  comments: {
-    id: number;
-    content: string;
-    user: {
-      id: number;
-      email: string;
-      username: string;
-      name: string;
-      createdAt: string;
-    };
-    createdAt: string;
-    updatedAt: string;
-  }[];
+  user: SignupResp;
   createdAt: string;
   updatedAt: string;
 };
@@ -219,7 +157,7 @@ const BoardAPI = {
         throw e;
       });
   },
-  getDetail: (id: string): Promise<detailPostResp> => {
+  getDetail: (id: string): Promise<postInfoResp> => {
     return axiosInstance
       .get(Url.getDetail(id))
       .then((resp) => resp.data)
@@ -228,7 +166,7 @@ const BoardAPI = {
         throw e;
       });
   },
-  updatePost: (id: string, body: postInfo): Promise<detailPostResp> => {
+  updatePost: (id: string, body: postInfo): Promise<postInfoResp> => {
     const url = Url.updatePost(id);
 
     return axiosInstance
@@ -247,6 +185,28 @@ const BoardAPI = {
       .then((resp) => resp.data)
       .catch((e) => {
         console.error("deletePost API Error:", e);
+        throw e;
+      });
+  },
+  likesPost: (id: string): Promise<postInfoResp> => {
+    const url = Url.likesPost(id);
+
+    return axiosInstance
+      .post(url)
+      .then((resp) => resp.data)
+      .catch((e) => {
+        console.error("likesPost API Error:", e);
+        throw e;
+      });
+  },
+  createComment: (id: string, content: string): Promise<commentsResp> => {
+    const url = Url.createComment(id);
+
+    return axiosInstance
+      .post(url, { content })
+      .then((resp) => resp.data)
+      .catch((e) => {
+        console.error("likesPost API Error:", e);
         throw e;
       });
   },

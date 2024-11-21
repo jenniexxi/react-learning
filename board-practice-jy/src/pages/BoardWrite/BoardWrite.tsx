@@ -1,11 +1,11 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import * as S from "./BoardWrite.style";
 import { SubmitHandler, useForm } from "react-hook-form";
-import BoardAPI, { detailPostResp, postInfo } from "@apis/boardApi";
+import BoardAPI, { postInfo, postInfoResp } from "@apis/boardApi";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-type ModifyState = { postDetailData: detailPostResp };
+type ModifyState = { postDetailData: postInfoResp };
 
 const BoardWrite = () => {
   const {

@@ -28,12 +28,12 @@ const BoardWrite = () => {
   }, [pathname]);
 
   useEffect(() => {
-    if (isWriteMode) {
+    if (!isWriteMode) {
       setValue("title", state.postDetailData.title);
       setValue("content", state.postDetailData.content);
     }
   }, [isWriteMode]);
-  console.log(state.postDetailData);
+  
   const { mutate: writeMutate } = useMutation({
     mutationFn: (body: postInfo) => BoardAPI.createPost(body),
     onSuccess: () => {

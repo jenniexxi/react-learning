@@ -78,7 +78,7 @@ export const CommentBox = styled.div`
 export const CommentList = styled.ul`
   margin-top: 15px;
 `;
-
+ 
 export const CommentItem = styled.li`
   margin-bottom: 10px;
   p {
@@ -88,3 +88,4 @@ export const CommentItem = styled.li`
     font-size: 13px;
   }
 `;
+ 
